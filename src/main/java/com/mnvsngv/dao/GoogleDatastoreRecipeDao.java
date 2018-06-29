@@ -16,9 +16,12 @@ public class GoogleDatastoreRecipeDao implements RecipeDao {
     private final String STEPS = "steps";
 
     private final Datastore DATASTORE;
+    private final KeyFactory KEY_FACTORY;
 
     public GoogleDatastoreRecipeDao() {
         DATASTORE = DatastoreOptions.getDefaultInstance().getService();
+        KEY_FACTORY = DATASTORE.newKeyFactory().setKind(ENTITY_KIND);
+
     }
 
     @Override
@@ -40,14 +43,14 @@ public class GoogleDatastoreRecipeDao implements RecipeDao {
     public List<Recipe> getAllRecipes() {
         Query<Entity> query = Query.newEntityQueryBuilder()
                 .setKind(ENTITY_KIND)
-                .setOrderBy(StructuredQuery.OrderBy.asc("created"))
                 .build();
         Iterator<Entity> iterator = DATASTORE.run(query);
 
         List<Recipe> recipeList = new ArrayList<>();
         iterator.forEachRemaining(entity -> {
             Recipe recipe = new Recipe();
-            recipe.setName(entity.getString(NAME));
+
+            recipe.setName(entity.getKey().getName());
             recipe.setSteps(entity.getString(STEPS));
             recipe.setIngredients(Utils.convertCsvToList(
                     entity.getString(INGREDIENTS)
@@ -55,8 +58,15 @@ public class GoogleDatastoreRecipeDao implements RecipeDao {
             recipe.setSpices(Utils.convertCsvToList(
                     entity.getString(SPICES)
             ));
+
+            recipeList.add(recipe);
         });
 
         return recipeList;
+    }
+
+    @Override
+    public void deleteRecipe(String recipeName) {
+        DATASTORE.delete(KEY_FACTORY.newKey(recipeName));
     }
 }

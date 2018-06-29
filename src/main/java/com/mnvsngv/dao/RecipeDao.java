@@ -4,7 +4,8 @@ import com.mnvsngv.models.Recipe;
 
 import java.util.List;
 
-interface RecipeDao {
+public interface RecipeDao {
     void addRecipe(Recipe recipe);
     List<Recipe> getAllRecipes();
+    void deleteRecipe(String recipeName);
 }
