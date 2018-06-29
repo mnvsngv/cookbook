@@ -47,26 +47,43 @@ public class GoogleDatastoreRecipeDao implements RecipeDao {
         Iterator<Entity> iterator = DATASTORE.run(query);
 
         List<Recipe> recipeList = new ArrayList<>();
-        iterator.forEachRemaining(entity -> {
-            Recipe recipe = new Recipe();
-
-            recipe.setName(entity.getKey().getName());
-            recipe.setSteps(entity.getString(STEPS));
-            recipe.setIngredients(Utils.convertCsvToList(
-                    entity.getString(INGREDIENTS)
-            ));
-            recipe.setSpices(Utils.convertCsvToList(
-                    entity.getString(SPICES)
-            ));
-
-            recipeList.add(recipe);
-        });
+        iterator.forEachRemaining(entity -> recipeList.add(convertEntityToRecipe(entity)));
 
         return recipeList;
     }
 
     @Override
+    public List<Recipe> searchRecipes(List<String> spices, List<String> ingredients) {
+        List<Recipe> allRecipes = getAllRecipes();
+        List<Recipe> validRecipes = new ArrayList<>();
+
+        for(Recipe recipe : allRecipes) {
+            if(recipe.getSpices().containsAll(spices)
+                    && recipe.getIngredients().containsAll(ingredients)) {
+                validRecipes.add(recipe);
+            }
+        }
+
+        return validRecipes;
+    }
+
+    @Override
     public void deleteRecipe(String recipeName) {
         DATASTORE.delete(KEY_FACTORY.newKey(recipeName));
+    }
+
+    private Recipe convertEntityToRecipe(Entity entity) {
+        Recipe recipe = new Recipe();
+
+        recipe.setName(entity.getKey().getName());
+        recipe.setSteps(entity.getString(STEPS));
+        recipe.setIngredients(Utils.convertCsvToList(
+                entity.getString(INGREDIENTS)
+        ));
+        recipe.setSpices(Utils.convertCsvToList(
+                entity.getString(SPICES)
+        ));
+
+        return recipe;
     }
 }
