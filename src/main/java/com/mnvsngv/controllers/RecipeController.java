@@ -13,7 +13,7 @@ import java.io.IOException;
 public class RecipeController {
 
     @PostMapping("/add")
-    public void greeting(@RequestBody String body) {
+    public void addRecipe(@RequestBody String body) {
         Recipe recipe = null;
         try {
             recipe = JsonUtils.convertJsonToObject(body, Recipe.class);
