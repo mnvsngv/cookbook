@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
+@RequestMapping("/recipes")
 public class RecipeController {
     private static final RecipeDao recipeDao = new GoogleDatastoreRecipeDao();
 
