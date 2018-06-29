@@ -7,12 +7,19 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
+
 @RestController
 public class RecipeController {
 
     @PostMapping("/add")
     public void greeting(@RequestBody String body) {
-        Recipe recipe = JsonUtils.convertJsonToObject(body, Recipe.class);
+        Recipe recipe = null;
+        try {
+            recipe = JsonUtils.convertJsonToObject(body, Recipe.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         new GoogleDatastoreRecipeDao().addRecipe(recipe);
     }
 }

@@ -1,15 +1,13 @@
 package com.mnvsngv.util;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.lang.reflect.Type;
+import java.io.IOException;
 
 public class JsonUtils {
-    private static final Gson gson = new Gson();
+    private static final ObjectMapper mapper = new ObjectMapper();
 
-    public static <T> T convertJsonToObject(String json, Class<T> valueType) {
-        Type type = new TypeToken<T>() {}.getType();
-        return gson.fromJson(json, type);
+    public static <T> T convertJsonToObject(String json, Class<T> valueType) throws IOException {
+        return mapper.readValue(json, valueType);
     }
 }
