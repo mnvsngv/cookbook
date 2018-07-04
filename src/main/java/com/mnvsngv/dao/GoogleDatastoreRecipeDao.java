@@ -10,7 +10,6 @@ import java.util.List;
 
 public class GoogleDatastoreRecipeDao implements RecipeDao {
     private final String ENTITY_KIND = "Recipe";
-    private final String NAME = "name";
     private final String SPICES = "spices";
     private final String INGREDIENTS = "ingredients";
     private final String STEPS = "steps";
