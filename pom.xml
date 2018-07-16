@@ -20,6 +20,12 @@
   <artifactId>cookbook</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>war</packaging>
+  <!--
+    - For local testing, use jar packaging
+    - Ensure that this change is not committed, otherwise deploy will fail
+    - In case of deployment issues, try reverting to war packaging, reverting exclusions below,
+      deleting 'target' folder and re-dploying
+  -->
 
   <name>cookbook</name>
   <description>A recipe storage and finder application</description>
@@ -37,6 +43,7 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
       <version>2.0.2.RELEASE</version>
+      <!-- For local testing, comment out the below exclusion -->
       <exclusions>
         <exclusion>
           <groupId>org.springframework.boot</groupId>
